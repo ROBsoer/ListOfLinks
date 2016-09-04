@@ -2,10 +2,9 @@
 	"use strict";
 
 	settings = settings || {
-			item:   "#queue > .item",
-			title:  ".title",
-			link:   ".item_link",
-			insert: "#page_queue"
+			item:  "#queue > .item",
+			title: ".title",
+			link:  ".item_link"
 		};
 
 
@@ -41,4 +40,3 @@
 	return string;
 
 })();
-
