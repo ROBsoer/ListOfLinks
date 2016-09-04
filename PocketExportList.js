@@ -1,21 +1,21 @@
 (function () {
 	"use strict";
 
-	const POCKET = {
-		item:  "#queue > .item",
-		title: ".title",
-		link:  ".item_link",
-		insert: "#page_queue",
+	let settings = {
+		item:   "#queue > .item",
+		title:  ".title",
+		link:   ".item_link",
+		insert: "#page_queue"
 	};
 
-	let items = document.querySelectorAll(POCKET.item);
+	let items = document.querySelectorAll(settings.item);
 	let list  = document.createElement("ul");
 
-	Array.prototype.forEach.call(items, function (el) {
+	Array.prototype.forEach.call(items, (el) => {
 		let li   = document.createElement("li");
 		let text = document.createTextNode(
-			"[" + el.querySelector(POCKET.title).textContent + "]" +
-			"(http://getpocket.com/" + el.querySelector(POCKET.link).getAttribute("href") + ")"
+			"[" + el.querySelector(settings.title).textContent + "]" +
+			"(" + window.location.host + el.querySelector(settings.link).getAttribute("href") + ")"
 		);
 
 		li.appendChild(text);
@@ -23,10 +23,8 @@
 	});
 
 
-	document.querySelector(POCKET.insert).appendChild(list);
+	document.querySelector(settings.insert).appendChild(list);
 
 	return list;
 
 })();
-
-
