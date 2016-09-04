@@ -1,30 +1,44 @@
-(function () {
+(function (settings) {
 	"use strict";
 
-	let settings = {
-		item:   "#queue > .item",
-		title:  ".title",
-		link:   ".item_link",
-		insert: "#page_queue"
-	};
+	settings = settings || {
+			item:   "#queue > .item",
+			title:  ".title",
+			link:   ".item_link",
+			insert: "#page_queue"
+		};
+
+
+	function copyToClipboard(text) {
+		var el            = document.createElement('textarea');
+		el.style.position = 'absolute';
+		el.style.left     = '-9999px';
+		el.setAttribute('readonly', '');
+		el.value = text;
+
+		document.body.appendChild(el);
+		el.select();
+		var success = document.execCommand('copy');
+		document.body.removeChild(el);
+		return success;
+	}
+
 
 	let items = document.querySelectorAll(settings.item);
-	let list  = document.createElement("ul");
+
+	let string = "";
 
 	Array.prototype.forEach.call(items, (el) => {
-		let li   = document.createElement("li");
-		let text = document.createTextNode(
-			"[" + el.querySelector(settings.title).textContent + "]" +
-			"(" + window.location.host + el.querySelector(settings.link).getAttribute("href") + ")"
-		);
-
-		li.appendChild(text);
-		list.appendChild(li);
+		let text = "[" + el.querySelector(settings.title).textContent + "]" +
+			"(" + window.location.host + el.querySelector(settings.link).getAttribute("href") + ")";
+		string += text + "\n";
 	});
 
 
-	document.querySelector(settings.insert).appendChild(list);
+	copyToClipboard(string);
+	alert("List is copied to clipboard:\n" + string);
 
-	return list;
+	return string;
 
 })();
+
