@@ -36,7 +36,7 @@
 
 
 	copyToClipboard(string);
-	alert("List is copied to clipboard:\n" + string);
+	alert("List have been copied to clipboard:\n" + string);
 
 	return string;
 
