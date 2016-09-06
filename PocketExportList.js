@@ -1,42 +1,40 @@
 (function (settings) {
-	"use strict";
-
-	settings = settings || {
-			item:  "#queue > .item",
-			title: ".title",
-			link:  ".item_link"
-		};
+  "use strict";
 
 
-	function copyToClipboard(text) {
-		var el            = document.createElement('textarea');
-		el.style.position = 'absolute';
-		el.style.left     = '-9999px';
-		el.setAttribute('readonly', '');
-		el.value = text;
-
-		document.body.appendChild(el);
-		el.select();
-		var success = document.execCommand('copy');
-		document.body.removeChild(el);
-		return success;
-	}
+  settings = settings || {
+        item:  "#queue > .item",
+        title: ".title",
+        link:  ".item_link"
+      };
 
 
-	let items = document.querySelectorAll(settings.item);
+  function copyToClipboard(text) {
+    var el            = document.createElement('textarea');
+    el.style.position = 'absolute';
+    el.style.left     = '-9999px';
+    el.setAttribute('readonly', '');
+    el.value = text;
 
-	let string = "";
+    document.body.appendChild(el);
+    el.select();
+    var success = document.execCommand('copy');
+    document.body.removeChild(el);
+    return success;
+  }
 
-	Array.prototype.forEach.call(items, (el) => {
-		let text = "[" + el.querySelector(settings.title).textContent + "]" +
-			"(" + window.location.host + el.querySelector(settings.link).getAttribute("href") + ")";
-		string += text + "\n";
-	});
+  function getList(config) {
+    let string = "";
 
+    Array.prototype.forEach.call(document.querySelectorAll(config.item), (el) => {
+      let text = "[" + el.querySelector(config.title).textContent + "]" +
+          "(" + window.location.host + el.querySelector(config.link).getAttribute("href") + ")";
+      string += text + "\n";
+    });
 
-	copyToClipboard(string);
-	alert("List have been copied to clipboard:\n" + string);
+    return string;
+  }
 
-	return string;
-
+  if (copyToClipboard(getList(settings))) alert("List have been copied to clipboard!");
 })();
+
