@@ -4,12 +4,14 @@
 	function getConfig(config) {
 		const PRESETS = {
 			"pocket": {
-				item:  "#queue > .item",
+				parent: "#queue",
+				item:  ".item",
 				title: ".title",
 				link:  ".item_link"
 			},
 			"youtube": {
-				item:  "#pl-video-list .pl-video",
+				parent: "#pl-video-list",
+				item:  ".pl-video",
 				title: ".pl-video-title-link",
 				link:  ".pl-video-title-link"
 			}
@@ -58,8 +60,8 @@
 			else string += getListItem(item, config);
 		}
 
-
-		const collection = document.querySelectorAll(config.item);
+		const parent = document.querySelector(config.parent);
+		const collection = parent.querySelectorAll(config.item);
 		let string       = "";
 
 		if (!reverse) {
