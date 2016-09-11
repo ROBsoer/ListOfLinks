@@ -1,4 +1,4 @@
-(function (reverse, settings) {
+(function (reverse, markdown, settings) {
 	"use strict";
 
 
@@ -30,10 +30,15 @@
 		return title + separator + link;
 	}
 
-	function getList(config, reverse = false) {
+	function getMarkdownListItem(el, config) {
+		return "[" + getListItem(...arguments, "](") + ")";
+	}
+
+	function getList(config, reverse = false, markdown = true) {
 		function addItemToList(item) {
 			string += "\n";
-			string += getListItem(item, config);
+			if (markdown) string += getMarkdownListItem(item, config);
+			else string += getListItem(item, config);
 		}
 
 
@@ -53,7 +58,7 @@
 		return string;
 	}
 
-	let list = getList(settings, reverse);
+	let list = getList(settings, reverse, markdown);
 
 
 	if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
