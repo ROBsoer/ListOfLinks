@@ -1,4 +1,4 @@
-(function (settings) {
+(function (reverse, settings) {
 	"use strict";
 
 
@@ -23,19 +23,37 @@
 		return success;
 	}
 
-	function getList(config) {
-		let string = "";
+	function getListItem(el, config, separator = " - ") {
+		const title = el.querySelector(config.title).textContent;
+		const link  = window.location.host + el.querySelector(config.link).getAttribute("href");
 
-		Array.prototype.forEach.call(document.querySelectorAll(config.item), (el) => {
-			let text = "[" + el.querySelector(config.title).textContent + "]" +
-				"(" + window.location.host + el.querySelector(config.link).getAttribute("href") + ")";
-			string += text + "\n";
-		});
+		return title + separator + link;
+	}
+
+	function getList(config, reverse = false) {
+		function addItemToList(item) {
+			string += "\n";
+			string += getListItem(item, config);
+		}
+
+
+		const collection = document.querySelectorAll(config.item);
+		let string       = "";
+
+		if (!reverse) {
+			for (let i = 0; i < collection.length; i++) {
+				addItemToList(collection[i]);
+			}
+		} else {
+			for (let i = collection.length - 1; i >= 0; i--) {
+				addItemToList(collection[i]);
+			}
+		}
 
 		return string;
 	}
 
-	let list = getList(settings);
+	let list = getList(settings, reverse);
 
 
 	if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
