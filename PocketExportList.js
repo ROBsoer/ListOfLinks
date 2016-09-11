@@ -1,12 +1,29 @@
-(function (reverse, markdown, settings) {
+(function (config, reverse, markdown) {
 	"use strict";
 
-
-	settings = settings || {
-			item:  "#queue > .item",
-			title: ".title",
-			link:  ".item_link"
+	function getConfig(config) {
+		const PRESETS = {
+			"pocket": {
+				item:  "#queue > .item",
+				title: ".title",
+				link:  ".item_link"
+			},
+			"youtube": {
+				item:  "#pl-video-list .pl-video",
+				title: ".pl-video-title-link",
+				link:  ".pl-video-title-link"
+			}
 		};
+
+		if (!config) return PRESETS["pocket"];
+
+		if (typeof config === "string") {
+			if (PRESETS[config]) return PRESETS[config];
+			else console.error("Wrong preset name");
+		} else {
+			return config;
+		}
+	}
 
 
 	function copyToClipboard(text) {
@@ -58,11 +75,12 @@
 		return string;
 	}
 
-	let list = getList(settings, reverse, markdown);
 
+	config = getConfig(config);
+	let list = getList(config, reverse, markdown);
 
 	if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
 
 	return list;
-})();
+})({item: "hello", title: "no item"}, true);
 
