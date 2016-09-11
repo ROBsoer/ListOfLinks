@@ -6,13 +6,11 @@
 			"pocket":  {
 				parent: "#queue",
 				item:   ".item",
-				title:  ".title",
-				link:   ".item_link"
+				link:   ".title"
 			},
 			"youtube": {
 				parent: "#pl-video-list",
 				item:   ".pl-video",
-				title:  ".pl-video-title-link",
 				link:   ".pl-video-title-link"
 			}
 		};
@@ -43,10 +41,11 @@
 	}
 
 	function getListItem(el, config, separator = " - ") {
-		let title  = el.querySelector(config.title).textContent;
-		const link = window.location.host + el.querySelector(config.link).getAttribute("href");
+		const filter = /\n[ ]{2,}/gi;
+		const link   = window.location.host + el.querySelector(config.link).getAttribute("href");
+		let title    = el.querySelector(config.link).textContent;
 
-		title = title.replace(/\n[ ]{2,}/gi, "");
+		title = title.replace(filter, "");
 
 		return title + separator + link;
 	}
