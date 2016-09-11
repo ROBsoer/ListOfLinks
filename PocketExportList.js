@@ -82,5 +82,5 @@
 	if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
 
 	return list;
-})({item: "hello", title: "no item"}, true);
+})();
 
