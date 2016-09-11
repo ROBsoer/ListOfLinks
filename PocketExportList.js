@@ -3,17 +3,17 @@
 
 	function getConfig(config) {
 		const PRESETS = {
-			"pocket": {
+			"pocket":  {
 				parent: "#queue",
-				item:  ".item",
-				title: ".title",
-				link:  ".item_link"
+				item:   ".item",
+				title:  ".title",
+				link:   ".item_link"
 			},
 			"youtube": {
 				parent: "#pl-video-list",
-				item:  ".pl-video",
-				title: ".pl-video-title-link",
-				link:  ".pl-video-title-link"
+				item:   ".pl-video",
+				title:  ".pl-video-title-link",
+				link:   ".pl-video-title-link"
 			}
 		};
 
@@ -43,8 +43,10 @@
 	}
 
 	function getListItem(el, config, separator = " - ") {
-		const title = el.querySelector(config.title).textContent;
-		const link  = window.location.host + el.querySelector(config.link).getAttribute("href");
+		let title  = el.querySelector(config.title).textContent;
+		const link = window.location.host + el.querySelector(config.link).getAttribute("href");
+
+		title = title.replace(/\n[ ]{2,}/gi, "");
 
 		return title + separator + link;
 	}
@@ -60,7 +62,7 @@
 			else string += getListItem(item, config);
 		}
 
-		const parent = document.querySelector(config.parent);
+		const parent     = document.querySelector(config.parent);
 		const collection = parent.querySelectorAll(config.item);
 		let string       = "";
 
@@ -78,7 +80,7 @@
 	}
 
 
-	config = getConfig(config);
+	config   = getConfig(config);
 	let list = getList(config, reverse, markdown);
 
 	if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
