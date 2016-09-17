@@ -1,7 +1,7 @@
-function ExportListOfLinks(config, reverse, markdown) {
+function ListOfLinks(reverse, markdown, config) {
 	"use strict";
 
-	this._PRESETS = [{
+	let PRESETS = [{
 		name:   "pocket",
 		config: {
 			parent: "#queue",
@@ -16,18 +16,17 @@ function ExportListOfLinks(config, reverse, markdown) {
 			link:   ".pl-video-title-link"
 		}
 	}];
+	this.list     = "";
+	this._host    = window.location.host;
 
-	this._host = window.location.host;
-
-
-	this.setConfig = function (config) {
+	this.setConfig = function (config, presets) {
 		if (typeof config === "string") {
-			config = this._PRESETS.find(el => {
+			config = presets.find(el => {
 					return el.name === config;
 				}).config || config;
 		} else if (config === undefined) {
 			try {
-				config = this._PRESETS.find(el => {
+				config = presets.find(el => {
 					return this._host.includes(el.name)
 				}).config;
 			} catch (err) {
@@ -35,9 +34,42 @@ function ExportListOfLinks(config, reverse, markdown) {
 			}
 		}
 
-		return checkConfig(config, this._PRESETS[0].config);
+		return checkConfig(config, presets[0].config);
 	};
 
+	this.getList = function (reverse = false, markdown = true) {
+		function addItemToList(item) {
+			this.list += "\n";
+			if (markdown) this.list += getMarkdownListItem(item, this._config);
+			else this.list += getListItem(item, this._config);
+		}
+
+		const parent     = document.querySelector(this._config.parent);
+		const collection = parent.querySelectorAll(this._config.item);
+
+		this.list = "";
+
+		if (!reverse) {
+			for (let i = 0; i < collection.length; i++) {
+				addItemToList.call(this, collection[i]);
+			}
+		} else {
+			for (let i = collection.length - 1; i >= 0; i--) {
+				addItemToList.call(this, collection[i]);
+			}
+		}
+
+		if (copyToClipboard(this.list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");
+		console.log(this.list);
+	};
+
+	// helpers
+	/**
+	 * compare config with standard
+	 * @param config
+	 * @param standard
+	 * @returns {*}
+	 */
 	function checkConfig(config, standard) {
 		if (typeof config == "object") {
 			for (let key in standard) {
@@ -53,73 +85,43 @@ function ExportListOfLinks(config, reverse, markdown) {
 		}
 	}
 
-	this._config = this.setConfig(config);
+	/**
+	 * copy text to clipboard
+	 * @param text
+	 * @returns {boolean}
+	 */
+	function copyToClipboard(text) {
+		var el            = document.createElement('textarea');
+		el.style.position = 'absolute';
+		el.style.left     = '-9999px';
+		el.setAttribute('readonly', '');
+		el.value = text;
 
-
-	/*function copyToClipboard(text) {
-	 var el            = document.createElement('textarea');
-	 el.style.position = 'absolute';
-	 el.style.left     = '-9999px';
-	 el.setAttribute('readonly', '');
-	 el.value = text;
-
-	 document.body.appendChild(el);
-	 el.select();
-	 var success = document.execCommand('copy');
-	 document.body.removeChild(el);
-	 return success;
-	 }*/
-
-	/*function getListItem(el, config, separator = " - ") {
-	 const siteName = window.location.host;
-
-	 let link  = String(el.querySelector(config.link).getAttribute("href"));
-	 let title = el.querySelector(config.link).textContent.trim();
-
-	 if (link.startsWith("/")) link = siteName + link;
-
-	 return title + separator + link;
-	 }*/
-
-	/*function getMarkdownListItem(el, config) {
-	 return "[" + getListItem(...arguments, "](") + ")";
-	 }*/
-
-	/*function getList(config, reverse = false, markdown = true) {
-	 function addItemToList(item) {
-	 string += "\n";
-	 if (markdown) string += getMarkdownListItem(item, config);
-	 else string += getListItem(item, config);
-	 }
-
-	 const parent     = document.querySelector(config.parent);
-	 const collection = parent.querySelectorAll(config.item);
-	 let string       = "";
-
-	 if (!reverse) {
-	 for (let i = 0; i < collection.length; i++) {
-	 addItemToList(collection[i]);
-	 }
-	 } else {
-	 for (let i = collection.length - 1; i >= 0; i--) {
-	 addItemToList(collection[i]);
-	 }
-	 }
-
-	 return string;
-	 }*/
-
-
-	/*config = getConfig(config);
-
-
-	 this._list = getList(config, reverse, markdown);
-
-	 if (copyToClipboard(list)) alert("List have been copied to the clipboard!\nYou can see your list in browser's console.");*/
-
-	return {
-		config:    this._config,
-		setConfig: this.setConfig
+		document.body.appendChild(el);
+		el.select();
+		var success = document.execCommand('copy');
+		document.body.removeChild(el);
+		return success;
 	}
 
+	function getListItem(el, config, separator = " - ") {
+		const siteName = window.location.host;
+
+		let link  = String(el.querySelector(config.link).getAttribute("href"));
+		let title = el.querySelector(config.link).textContent.trim();
+
+		if (link.startsWith("/")) link = siteName + link;
+
+		return title + separator + link;
+	}
+
+	function getMarkdownListItem(el, config) {
+		return "[" + getListItem(...arguments, "](") + ")";
+	}
+
+	// process
+	this._config = this.setConfig(config, PRESETS);
+	this.getList(reverse, markdown);
 }
+
+let list = new ListOfLinks();
