@@ -41,11 +41,10 @@
 	}
 
 	function getListItem(el, config, separator = " - ") {
-		const FILTER   = /\n[ ]{2,}/gi;
 		const siteName = window.location.host;
 
 		let link  = String(el.querySelector(config.link).getAttribute("href"));
-		let title = el.querySelector(config.link).textContent.replace(FILTER, "");
+		let title = el.querySelector(config.link).textContent.trim();
 
 		if (link.startsWith("/")) link = siteName + link;
 
