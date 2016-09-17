@@ -16,8 +16,9 @@ function ListOfLinks(reverse, markdown, config) {
 			link:   ".pl-video-title-link"
 		}
 	}];
-	this.list     = "";
-	this._host    = window.location.host;
+
+	this.list  = "";
+	this._host = window.location.host;
 
 	this.setConfig = function (config, presets) {
 		if (typeof config === "string") {
@@ -25,13 +26,7 @@ function ListOfLinks(reverse, markdown, config) {
 					return el.name === config;
 				}).config || config;
 		} else if (config === undefined) {
-			try {
-				config = presets.find(el => {
-					return this._host.includes(el.name)
-				}).config;
-			} catch (err) {
-				throw new Error(`Plugin has no preset for ${this._host}`);
-			}
+			config = searchPresetForHost(this._host, presets);
 		}
 
 		return checkConfig(config, presets[0].config);
@@ -82,6 +77,22 @@ function ListOfLinks(reverse, markdown, config) {
 			return config;
 		} else {
 			throw new Error("wrong config");
+		}
+	}
+
+	/**
+	 * detect preset for current host
+	 * @param host
+	 * @param presets
+	 * @returns {config|{parent, item, link}}
+	 */
+	function searchPresetForHost(host, presets) {
+		try {
+			return config = presets.find(el => {
+				return host.includes(el.name)
+			}).config;
+		} catch (err) {
+			throw new Error(`Plugin has no preset for ${host}`);
 		}
 	}
 
