@@ -15,6 +15,14 @@ function ListOfLinks(reverse, markdown, config) {
 			item:   ".pl-video",
 			link:   ".pl-video-title-link"
 		}
+	}, {
+		name:   "vimeo",
+		config: {
+			parent: "#browse_content ol",
+			item:   "li",
+			link:   "a",
+			title:  "a .title"
+		}
 	}];
 
 	this.list  = "";
@@ -120,9 +128,10 @@ function ListOfLinks(reverse, markdown, config) {
 		const siteName = window.location.host;
 
 		let link  = String(el.querySelector(config.link).getAttribute("href"));
-		let title = el.querySelector(config.link).textContent
-		              .trim()
-		              .replace(FILTER, "");
+		let title = (!config.title) ? el.querySelector(config.link).textContent
+			                        : el.querySelector(config.title).textContent;
+
+		title = title.trim().replace(FILTER, "");
 
 		if (link.startsWith("/")) link = siteName + link;
 
