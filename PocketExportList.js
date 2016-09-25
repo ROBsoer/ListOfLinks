@@ -125,15 +125,12 @@ function ListOfLinks(reverse, markdown, config) {
 
 	function getListItem(el, config, separator = " - ") {
 		const FILTER   = /\n[ ]{2,}/gi;
-		const siteName = window.location.host;
 
-		let link  = String(el.querySelector(config.link).getAttribute("href"));
+		let link  = String(el.querySelector(config.link).href);
 		let title = (!config.title) ? el.querySelector(config.link).textContent
 			                        : el.querySelector(config.title).textContent;
 
 		title = title.trim().replace(FILTER, "");
-
-		if (link.startsWith("/")) link = siteName + link;
 
 		return title + separator + link;
 	}
