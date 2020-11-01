@@ -11,9 +11,10 @@ function ListOfLinks(reverse, markdown, config) {
 	}, {
 		name:   "youtube",
 		config: {
-			parent: "#pl-video-list",
-			item:   ".pl-video",
-			link:   ".pl-video-title-link"
+			parent: "#contents",
+			item:   "#content",
+			link:   ".yt-simple-endpoint",
+      title: '#video-title'
 		}
 	}, {
 		name:   "vimeo",
